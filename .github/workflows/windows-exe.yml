@@ -1,0 +1,41 @@
+name: Build Windows EXE (legacy compatible)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/windows-desktop-phase1
+    paths:
+      - 'desktop_app/**'
+      - '.github/workflows/windows-exe.yml'
+
+jobs:
+  windows-exe:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+          architecture: 'x86'
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r desktop_app/requirements.txt
+          python -m pip install pyinstaller==5.13.2
+      - name: Verify imports
+        shell: pwsh
+        run: |
+          python -c "import PySide2, openpyxl; print('Imports OK')"
+      - name: Package portable EXE
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --name SplitDataPro desktop_app/main.py
+      - name: Upload downloadable EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: SplitDataPro-Windows7-10-11-x86
+          path: dist/SplitDataPro.exe
+          if-no-files-found: error
+          retention-days: 30
