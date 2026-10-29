@@ -94,7 +94,7 @@ Private Sub CMD_Generate_Click()
             If Trim(header.Value & "") <> "" Then
                 placeholder = "<" & header.Value & ">"
                 
-                ' THIS IS THE FINAL FIX – NO MORE "#" EVER
+                ' THIS IS THE FINAL FIX â€“ NO MORE "#" EVER
                 cellText = SafeCellText(ws.Cells(rw, header.Column))
                 
                 generatedPath = Replace(generatedPath, placeholder, cellText)
@@ -126,7 +126,7 @@ End Sub
 
 
 '--------------------------------------------------------------
-' THE ONLY FUNCTION YOU NEED – NEVER RETURNS "#" OR "##"
+' THE ONLY FUNCTION YOU NEED â€“ NEVER RETURNS "#" OR "##"
 '--------------------------------------------------------------
 Private Function SafeCellText(c As Range) As String
     Dim tempWidth As Double
@@ -248,9 +248,9 @@ CleanExit:
     
     If Err.Number = 0 Then
         MsgBox "Cleanup Complete!" & vbCrLf & _
-               "• All hidden sheets deleted" & vbCrLf & _
-               "• All blank sheets deleted" & vbCrLf & _
-               "• All hidden & blank rows/columns removed", _
+               "â€¢ All hidden sheets deleted" & vbCrLf & _
+               "â€¢ All blank sheets deleted" & vbCrLf & _
+               "â€¢ All hidden & blank rows/columns removed", _
                vbInformation
     Else
         MsgBox "Error: " & Err.Description, vbCritical
@@ -704,7 +704,77 @@ Private Function HasControl(frm As Object, controlName As String) As Boolean
     On Error GoTo 0
 End Function
 
+' =========================================================
+' SPLIT DATA PRO - MODERN NATIVE USERFORM THEME
+' Designed to preserve existing controls and event handlers.
+' Colors use native VBA RGB values; no external dependencies.
+' =========================================================
+Private Sub ApplyModernTheme()
+    On Error Resume Next
+
+    Dim ctl As Object
+    Dim themeFont As String
+    themeFont = "Segoe UI"
+
+    Me.Caption = "Split Data Pro  |  Excel Data Tools"
+    Me.BackColor = RGB(246, 248, 252)
+
+    For Each ctl In Me.Controls
+        Err.Clear
+        Select Case TypeName(ctl)
+            Case "CommandButton"
+                ctl.Font.Name = themeFont
+                ctl.Font.Size = 9
+                ctl.Font.Bold = True
+                ctl.BackColor = RGB(235, 241, 250)
+                ctl.ForeColor = RGB(35, 57, 92)
+                ctl.TakeFocusOnClick = False
+                ctl.ControlTipText = "Click to " & Replace(Replace(ctl.Name, "CMD_", ""), "_", " ")
+            Case "TextBox", "ComboBox"
+                ctl.Font.Name = themeFont
+                ctl.Font.Size = 10
+                ctl.BackColor = RGB(255, 255, 255)
+                ctl.ForeColor = RGB(30, 41, 59)
+                ctl.SpecialEffect = 2  ' fmSpecialEffectSunken
+            Case "Label"
+                ctl.Font.Name = themeFont
+                ctl.ForeColor = RGB(71, 85, 105)
+                ctl.BackStyle = 0  ' fmBackStyleTransparent
+            Case "Frame"
+                ctl.Font.Name = themeFont
+                ctl.Font.Bold = True
+                ctl.ForeColor = RGB(37, 62, 102)
+                ctl.BackColor = RGB(255, 255, 255)
+            Case "OptionButton", "CheckBox"
+                ctl.Font.Name = themeFont
+                ctl.ForeColor = RGB(51, 65, 85)
+                ctl.BackColor = RGB(246, 248, 252)
+        End Select
+    Next ctl
+
+    ' Emphasize the action buttons without altering their positions.
+    StylePrimaryButton "Split"
+    StylePrimaryButton "CMD_Generate"
+    StylePrimaryButton "SplitAsComboCount"
+    StylePrimaryButton "CompineVertically"
+    StylePrimaryButton "CompineHorizontally"
+
+    Me.Repaint
+    On Error GoTo 0
+End Sub
+
+Private Sub StylePrimaryButton(ByVal controlName As String)
+    On Error Resume Next
+    With Me.Controls(controlName)
+        .BackColor = RGB(37, 99, 235)
+        .ForeColor = RGB(255, 255, 255)
+        .Font.Bold = True
+    End With
+    On Error GoTo 0
+End Sub
+
 Private Sub UserForm_Initialize()
+    ApplyModernTheme
     Dim ws As Worksheet
     Dim col As Range
     Set ws = ActiveSheet ' Use the active sheet
