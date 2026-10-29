@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
-from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
+from PySide2.QtCore import Qt, QThread, Signal
+from PySide2.QtWidgets import (QApplication, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
     QLabel, QPushButton, QFileDialog, QFrame, QStackedWidget, QLineEdit, QSpinBox,
     QTableWidget, QTableWidgetItem, QMessageBox, QProgressBar, QHeaderView)
 from openpyxl import load_workbook, Workbook
@@ -256,4 +256,4 @@ if __name__=="__main__":
     app.setStyleSheet(STYLE)
     window=MainWindow()
     window.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
